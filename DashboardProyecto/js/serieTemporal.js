@@ -1,87 +1,89 @@
-// -------------------------------------------------------
-// Módulo: serieTemporal.js
-// Descripción: Visualiza las ventas agrupadas por mes y por producto
-// Caso de uso: Analizar estacionalidad y comparar volúmenes de ventas por producto.
-// -------------------------------------------------------
+// ------------------------------
+//     serieTemporal.js
+// ------------------------------
 
+/**
+ * Este script dibujará un gráfico de líneas (serie temporal)
+ * leyendo datos de un CSV ubicado en /data/ventas_diarias.csv
+ */
 
-// Definir márgenes y dimensiones del gráfico.
-const margin = { top: 20, right: 30, bottom: 70, left: 60 },
-      width = 900 - margin.left - margin.right,
-      height = 500 - margin.top - margin.bottom;
+// 1. Definir dimensiones y márgenes del gráfico
+const margin = { top: 20, right: 30, bottom: 30, left: 50 },
+      width  = 800 - margin.left - margin.right,
+      height = 400 - margin.top - margin.bottom;
 
-// Crear el contenedor SVG dentro del div asignado en index.html.
-// Se asume que en index.html tienes un div con id="serie-temporal".
+// 2. Crear el contenedor SVG y un "g" principal
 const svg = d3.select("#serie-temporal")
   .append("svg")
-  .attr("width", width + margin.left + margin.right)
-  .attr("height", height + margin.top + margin.bottom)
+    .attr("width",  width  + margin.left + margin.right)
+    .attr("height", height + margin.top  + margin.bottom)
   .append("g")
-  .attr("transform", `translate(${margin.left},${margin.top})`);
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
+// 3. Cargar los datos del CSV
+//    Asegúrate de que tu archivo se llame como tú decidas (ej. ventas_diarias.csv)
+//    y que tenga columnas "date" y "revenue"
+d3.csv("data/ventas_diarias.csv").then(function(data) {
 
- // Cargar y procesar el CSV con las agregaciones de ventas.
- d3.csv("./data/agrupado_por_mes_numero_de_ventas.csv").then(data => {
+  // 3.1 Parsear el formato de fecha según tu CSV
+  //     Si tu fecha es "2019-01-15", con año-mes-día:
+  const parseDate = d3.timeParse("%Y-%m-%d");
   
-  // Convertir QuantityOrdered a número
+  // 3.2 Convertir cada fila a los tipos adecuados
   data.forEach(d => {
-    d.QuantityOrdered = +d.QuantityOrdered;
-    // Si es necesario, limpia o ajusta el valor de MesAño (por ejemplo, quitar espacios).
-    d.MesAño = d.MesAño.trim();
+    d.date    = parseDate(d.date);     // convierte texto a fecha
+    d.Revenue = +d.Revenue;           // convierte texto a número
   });
 
-  // Extraer la lista única de meses y productos.
-  const meses = Array.from(new Set(data.map(d => d.MesAño)));
-  const productos = Array.from(new Set(data.map(d => d.Product)));
+  // 3.3 Ordenar datos por fecha (opcional pero recomendable)
+  data.sort((a, b) => d3.ascending(a.date, b.date));
 
-  // Escala principal en eje X: cada grupo corresponde a un mes.
-  const xScale = d3.scaleBand()
-    .domain(meses)
-    .range([0, width])
-    .padding(0.2);
+  // 4. Definir las escalas en base a los datos
+  const x = d3.scaleTime()
+    .domain(d3.extent(data, d => d.date))  // mínimo y máximo de la fecha
+    .range([0, width]);
 
-  // Subescala para distribuir las barras de productos dentro de cada mes.
-  const xSubgroup = d3.scaleBand()
-    .domain(productos)
-    .range([0, xScale.bandwidth()])
-    .padding(0.05);
-
-  // Escala para el eje Y (cantidad vendida).
-  const yScale = d3.scaleLinear()
-    .domain([0, d3.max(data, d => d.QuantityOrdered)])
-    .nice()
+  const y = d3.scaleLinear()
+    .domain([0, d3.max(data, d => d.Revenue)]) // de 0 al máx de ingresos
     .range([height, 0]);
 
-  // Agregar eje X y girar las etiquetas para mayor legibilidad.
+  // 5. Dibujar los ejes (abajo para X, izquierda para Y)
+  const xAxis = d3.axisBottom(x).ticks(6); // .ticks(6) sugiere ~6 divisiones
+  const yAxis = d3.axisLeft(y);
+
   svg.append("g")
-    .attr("transform", `translate(0, ${height})`)
-    .call(d3.axisBottom(xScale))
-    .selectAll("text")
-    .attr("transform", "rotate(-45)")
-    .style("text-anchor", "end");
+     .attr("transform", `translate(0, ${height})`)
+     .call(xAxis);
 
-  // Agregar eje Y.
   svg.append("g")
-    .call(d3.axisLeft(yScale));
+     .call(yAxis);
 
-  // Agrupar los datos por MesAño
-  const dataPorMes = d3.group(data, d => d.MesAño); 
+  // 6. Generador de línea
+  const line = d3.line()
+    .x(d => x(d.date))
+    .y(d => y(d.Revenue));
 
-  // Dibujar las barras agrupadas: cada grupo (mes) contendrá las barras por producto.
-  svg.selectAll("g.grupo-mes")
-    .data(dataPorMes)
-    .join("g")
-      .attr("class", "grupo-mes")
-      .attr("transform", d => `translate(${xScale(d[0])},0)`)
-    .selectAll("rect")
-    .data(d => d[1])  // d[1] contiene los registros del mes.
-    .join("rect")
-      .attr("x", d => xSubgroup(d.Product))
-      .attr("y", d => yScale(d.QuantityOrdered))
-      .attr("width", xSubgroup.bandwidth())
-      .attr("height", d => height - yScale(d.QuantityOrdered))
-      .attr("fill", "steelblue");
+  // 7. Dibujar la línea
+  svg.append("path")
+     .datum(data)                // bind array completo
+     .attr("fill", "none")       // sin relleno
+     .attr("stroke", "steelblue")// color de la línea
+     .attr("stroke-width", 2)
+     .attr("d", line);
 
-}).catch(error => {
-  console.error("Error al cargar el dataset:", error);
+  // (Opcional) 8. Añadir círculos en cada punto
+  svg.selectAll("circle.point")
+     .data(data)
+     .enter()
+     .append("circle")
+       .attr("class", "point")
+       .attr("cx", d => x(d.date))
+       .attr("cy", d => y(d.Revenue))
+       .attr("r", 3)
+       .attr("fill", "steelblue");
+
+  // (Opcional) 9. Podrías implementar tooltips, transiciones, etc.
+
+}).catch(function(error) {
+  console.error("Error al cargar o procesar el CSV:", error);
 });
