@@ -1,0 +1,44 @@
+/* styles.css */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* Encabezado (Panel de KPIs) */
+  #kpi-panel {
+    background-color: #f5f5f5;
+    padding: 1rem;
+    text-align: center;
+    /* Ajusta alto, colores, etc. */
+  }
+  
+  /* Contenedor principal */
+  #main-container {
+    display: flex;       /* Activamos flexbox */
+    flex-direction: row; /* Tres columnas en fila */
+    gap: 1rem;           /* Espacio entre módulos */
+    padding: 1rem;
+  }
+  
+  /* Módulo de serie temporal */
+  #modulo-serie-temporal {
+    flex: 1;              /* Ocupa 1 parte de espacio */
+    background-color: #ececff;
+    padding: 1rem;
+  }
+  
+  /* Módulo 2 */
+  #modulo-2 {
+    flex: 1;              /* Ocupa 1 parte de espacio */
+    background-color: #f0f0ff;
+    padding: 1rem;
+  }
+  
+  /* Módulo del mapa */
+  #modulo-mapa {
+    flex: 1;              /* Ocupa 1 parte de espacio */
+    background-color: #fff0f0;
+    padding: 1rem;
+  }  

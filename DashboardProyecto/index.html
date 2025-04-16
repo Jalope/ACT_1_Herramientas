@@ -1,26 +1,61 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Dashboard Interactivo</title>
-  <!-- Hoja de estilos global del proyecto -->
-  <link rel="stylesheet" href="css/styles.css">
+  
+  <!-- Enlaza tu hoja de estilos principal -->
+  <link rel="stylesheet" href="css/styles.css" />
 </head>
 <body>
-  <!-- Contenedor del módulo 1: Serie Temporal -->
-  <div id="serie-temporal">
-    <!-- Aquí se renderizará el gráfico de serie temporal usando D3.js -->
-  </div>
+  <!-- =======================
+       1. ENCABEZADO (Panel de KPIs)
+  ======================== -->
+  <header id="kpi-panel">
+    <h1>Panel de KPIs</h1>
+    <!-- Aquí podrías insertar tarjetas o indicadores clave (KPI) -->
+  </header>
 
-  <!-- Contenedores para otros módulos (a integrar en el futuro) -->
-  <!-- <div id="mapa-interactivo"></div> -->
-  <!-- <div id="visualizacion-comparativa"></div> -->
-  <!-- <div id="kpi-panel"></div> -->
+  <!-- =======================
+       2. CONTENEDOR PRINCIPAL 
+          (Serie Temporal, Módulo 2, Módulo Mapa)
+  ======================== -->
+  <main id="main-container">
+    <!-- 2.1. Módulo de Serie Temporal -->
+    <section id="modulo-serie-temporal">
+      <h2>Módulo de Serie Temporal</h2>
+      <!-- Botones de diario/mensual, tu gráfico con D3, etc. -->
+      <div id="opciones-frecuencia">
+        <button id="btn-diaria">Diaria</button>
+        <button id="btn-mensual">Mensual</button>
+      </div>
+      <div id="grafico-serie-temporal">
+        <!-- D3 insertará aquí la serie temporal -->
+      </div>
+    </section>
 
-  <!-- Carga de la librería D3.js -->
+    <!-- 2.2. Módulo 2 -->
+    <section id="modulo-2">
+      <h2>Módulo 2</h2>
+      <!-- Aquí irán las visualizaciones o contenido de tu segundo módulo -->
+    </section>
+
+    <!-- 2.3. Módulo del Mapa -->
+    <section id="modulo-mapa">
+      <h2>Módulo del Mapa</h2>
+      <!-- Aquí irán las visualizaciones de mapa, por ejemplo con Leaflet o D3 -->
+    </section>
+  </main>
+
+  <!-- =======================
+       SCRIPTS
+  ======================== -->
+  <!-- Carga de la librería D3 (o las que necesites) -->
   <script src="https://d3js.org/d3.v7.min.js"></script>
-  <!-- Script para el gráfico de serie temporal -->
-  <script src="./js/serieTemporal.js"></script>
+
+  <!-- Scripts de tus módulos -->
+  <script src="js/serieTemporal.js"></script>
+  <!-- Podrías tener otros scripts para tu Módulo 2 o el Mapa -->
 </body>
 </html>
