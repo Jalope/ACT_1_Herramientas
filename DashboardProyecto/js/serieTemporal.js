@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
          .attr("stroke-width", 2)
          .attr("d", line);
 
-      // (Opcional) Añade círculos en cada punto de la línea para facilitar la interacción o visualización
+      // Añade círculos en cada punto de la línea para facilitar la interacción o visualización
       svg.selectAll("circle.point")
          .data(data)
          .enter()
@@ -91,12 +91,12 @@ document.addEventListener("DOMContentLoaded", function() {
     loadChart("data/ventas_diarias.csv", "%Y-%m-%d");
   });
 
-  // Ejemplo: si tienes un botón para la vista mensual, podrías hacerlo así:
+  // Mensual
   document.getElementById("btn-mensual").addEventListener("click", function() {
     loadChart("data/ventas_mensuales.csv", "%Y-%m");
   });
 
-  // (Opcional) Carga por defecto la vista diaria al iniciar.
+  // Carga por defecto la vista diaria al iniciar.
   loadChart("data/ventas_diarias.csv", "%Y-%m-%d");
 
 });
