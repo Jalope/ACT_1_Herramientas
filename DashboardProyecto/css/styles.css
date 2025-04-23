@@ -41,4 +41,80 @@
     flex: 1;              /* Ocupa 1 parte de espacio */
     background-color: #fff0f0;
     padding: 1rem;
-  }  
+  }
+  
+  #map {
+    height: 600px;
+    width: 100%;
+  }
+  .tooltip {
+    position: absolute;
+    text-align: center;
+    padding: 6px;
+    font: 12px sans-serif;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    pointer-events: none;
+  }
+  .tooltip {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    padding: 6px;
+    font-size: 13px;
+    pointer-events: none;
+    display: none;
+    z-index: 9999;
+  }
+  .leaflet-overlay-pane svg {
+    z-index: 500;
+    position: absolute;
+  }
+  circle {
+    pointer-events: all;
+  }
+
+  .legend {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: white;
+    padding: 12px 16px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 13px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    z-index: 999;
+    width: 150px;
+  }
+  
+  .legend-title {
+    font-weight: bold;
+    margin-bottom: 8px;
+  }
+  
+  .legend-section {
+    margin-bottom: 12px;
+  }
+  
+  .legend-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 3px;
+  }
+  
+  .legend-item-circle {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    margin-right: 8px;
+    flex-shrink: 0;
+    border: 1px solid #aaa;
+  }
+  
+  .legend-item svg {
+    margin-right: 8px;
+  }
+  
