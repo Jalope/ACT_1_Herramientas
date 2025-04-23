@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard Interactivo</title>
-  
+
   <!-- Enlaza tu hoja de estilos principal -->
   <link rel="stylesheet" href="css/sb-admin-2.css" />
   <link rel="stylesheet" href="css/sb-admin-2.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="css/styles.css" />
 </head>
+
 <body>
   <!-- =======================
        1. ENCABEZADO (Panel de KPIs)
@@ -36,28 +39,53 @@
         <!-- D3 insertará aquí la serie temporal -->
       </div>
     </section>
+    <!-----FIN MODULO DE SERIE TEMPORAL------>
 
-    <!-- 2.2. Módulo 2 -->
+    <!-- 2.2. Módulo MAPA 2 -->
     <section id="modulo-2">
-      <h2>Módulo 2</h2>
-      <!-- Aquí irán las visualizaciones o contenido de tu segundo módulo -->
+      <div>
+      <select id="mes-selector" class="form-select">
+        <option value="01">Enero</option>
+        <option value="02">Febrero</option>
+        <option value="03">Marzo</option>
+        <option value="04">Abril</option>
+        <option value="05">Mayo</option>
+        <option value="06">Junio</option>
+        <option value="07">Julio</option>
+        <option value="08">Agosto</option>
+        <option value="09">Septiembre</option>
+        <option value="10">Octubre</option>
+        <option value="11">Noviembre</option>
+        <option value="12">Diciembre</option>
+      </select><button id="play-button">▶ Reproducir</button>
+      <div id="map"><div class="legend" id="legend"></div></div>
+      <div id="tooltip" class="tooltip"></div>
+      
+    </div>
     </section>
+    <!----------FIN MODULO MAPA---------->
+
 
     <!-- 2.3. Módulo del Mapa -->
     <section id="modulo-mapa">
       <h2>Módulo del Mapa</h2>
       <!-- Aquí irán las visualizaciones de mapa, por ejemplo con Leaflet o D3 -->
     </section>
-  </main>
 
-  <!-- =======================
+    <!-- =======================
        SCRIPTS
   ======================== -->
-  <!-- Carga de la librería D3 (o las que necesites) -->
-  <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Carga de la librería D3 (o las que necesites) -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 
-  <!-- Scripts de tus módulos -->
-  <script src="js/serieTemporal.js"></script>
-  <!-- Podrías tener otros scripts para tu Módulo 2 o el Mapa -->
+
+    <!-- Scripts de tus módulos -->
+    <script src="js/serieTemporal.js"></script>
+
+    <!-- Podrías tener otros scripts para tu Módulo 2 o el Mapa -->
+    <script type="module" src="js/modulo2.js"></script>
+  </main>
 </body>
+
 </html>
