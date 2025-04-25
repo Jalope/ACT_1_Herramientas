@@ -47,26 +47,18 @@
     height: 600px;
     width: 100%;
   }
-  .tooltip {
-    position: absolute;
-    text-align: center;
-    padding: 6px;
-    font: 12px sans-serif;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    pointer-events: none;
-  }
-  .tooltip {
-    position: absolute;
-    background: white;
-    border: 1px solid #ccc;
-    padding: 6px;
-    font-size: 13px;
-    pointer-events: none;
-    display: none;
-    z-index: 9999;
-  }
+#tooltip {
+  position: absolute;
+  display: none;
+  pointer-events: none;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 6px 10px;
+  font-size: 12px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
   .leaflet-overlay-pane svg {
     z-index: 500;
     position: absolute;
