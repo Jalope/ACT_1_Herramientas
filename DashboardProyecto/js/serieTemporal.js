@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // Definición de márgenes y dimensiones para el SVG
   const margin = { top: 20, right: 30, bottom: 30, left: 50 },
-        width  = 800 - margin.left - margin.right,
+        width  = 600 - margin.left - margin.right,
         height = 400 - margin.top - margin.bottom;
 
   /**
