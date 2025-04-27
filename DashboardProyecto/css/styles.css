@@ -1,52 +1,56 @@
 /* styles.css */
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  /* Encabezado (Panel de KPIs) */
-  #kpi-panel {
-    background-color: #f5f5f5;
-    padding: 1rem;
-    text-align: center;
-    /* Ajusta alto, colores, etc. */
-  }
-  
-  /* Contenedor principal */
-  #main-container {
-    display: flex;       /* Activamos flexbox */
-    flex-direction: row; /* Tres columnas en fila */
-    gap: 1rem;           /* Espacio entre módulos */
-    padding: 1rem;
-  }
-  
-  /* Módulo de serie temporal */
-  #modulo-serie-temporal {
-    flex: 1;              /* Ocupa 1 parte de espacio */
-    background-color: #ececff;
-    padding: 1rem;
-  }
-  
-  /* Módulo 2 */
-  #modulo-2 {
-    flex: 1;              /* Ocupa 1 parte de espacio */
-    background-color: #d5eef0;
-    padding: 1rem;
-  }
-  
-  /* Módulo del mapa */
-  #modulo-mapa {
-    flex: 1;              /* Ocupa 1 parte de espacio */
-    background-color: #fff0f0;
-    padding: 1rem;
-  }
-  
-  #map {
-    height: 600px;
-    width: 100%;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Encabezado (Panel de KPIs) */
+#kpi-panel {
+  background-color: #f5f5f5;
+  padding: 1rem;
+  text-align: center;
+  /* Ajusta alto, colores, etc. */
+}
+
+/* Contenedor principal */
+#main-container {
+  display: flex;
+  flex-direction: column;  /* apila en vertical */
+  gap: 1rem;               /* espacio entre módulos */
+  padding: 1rem;
+}
+
+/* Cada sección ocupa todo el ancho */
+#main-container section {
+  width: 100%;
+}
+
+/* Módulo de serie temporal */
+#modulo-serie-temporal {
+  background-color: #ececff;
+  padding: 1rem;
+}
+
+/* Módulo 2 (mapa) */
+#modulo-2 {
+  background-color: #d5eef0;
+  padding: 1rem;
+}
+
+/* Módulo de ventas */
+#modulo-ventas {
+  background-color: #fff0f0;
+  padding: 1rem;
+}
+
+/* Mapa, tooltip y leyenda */
+#map {
+  height: 600px;
+  width: 100%;
+}
+
 #tooltip {
   position: absolute;
   display: none;
@@ -59,54 +63,44 @@
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   z-index: 1000;
 }
-  .leaflet-overlay-pane svg {
-    z-index: 500;
-    position: absolute;
-  }
-  circle {
-    pointer-events: all;
-  }
 
-  .legend {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: white;
-    padding: 12px 16px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    font-family: 'Segoe UI', sans-serif;
-    font-size: 13px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    z-index: 999;
-    width: 150px;
-  }
-  
-  .legend-title {
-    font-weight: bold;
-    margin-bottom: 8px;
-  }
-  
-  .legend-section {
-    margin-bottom: 12px;
-  }
-  
-  .legend-item {
-    display: flex;
-    align-items: center;
-    margin-bottom: 3px;
-  }
-  
-  .legend-item-circle {
-    width: 16px;
-    height: 16px;
-    border-radius: 50%;
-    margin-right: 8px;
-    flex-shrink: 0;
-    border: 1px solid #aaa;
-  }
-  
-  .legend-item svg {
-    margin-right: 8px;
-  }
-  
+.leaflet-overlay-pane svg {
+  z-index: 500;
+  position: absolute;
+}
+
+circle {
+  pointer-events: all;
+}
+
+.legend {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: white;
+  padding: 12px 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 13px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  z-index: 999;
+  width: 150px;
+}
+
+.legend-title {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.legend-section {
+  margin-bottom: 10px;
+}
+
+#grafico-serie-temporal,
+#grafico-ventas {
+  width: 100%;
+  height: 400px;
+  position: relative;
+  margin: 20px 0;
+}

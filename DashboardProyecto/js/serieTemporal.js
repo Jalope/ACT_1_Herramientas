@@ -1,10 +1,13 @@
 // Espera a que se cargue todo el DOM
 document.addEventListener("DOMContentLoaded", function() {
+  const container = document.getElementById("grafico-serie-temporal");
+  let margin, width, height, svg, x, y, line;
 
-  // Definición de márgenes y dimensiones para el SVG
-  const margin = { top: 20, right: 30, bottom: 30, left: 50 },
-        width  = 600 - margin.left - margin.right,
-        height = 400 - margin.top - margin.bottom;
+  function updateDimensions() {
+    margin = { top: 20, right: 30, bottom: 30, left: 50 };
+    width = container.offsetWidth - margin.left - margin.right;
+    height = container.offsetHeight - margin.top - margin.bottom;
+  }
 
   /**
    * Función que carga un CSV, parsea los datos y dibuja la serie temporal.
@@ -12,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
    * @param {string} dateFormat - Formato de la fecha para parsear (e.g., "%Y-%m-%d").
    */
   function loadChart(csvFile, dateFormat) {
+    updateDimensions();
     // Elimina el SVG anterior (si existe) para limpiar el contenedor
     d3.select("#grafico-serie-temporal").select("svg").remove();
 
@@ -30,39 +34,46 @@ document.addEventListener("DOMContentLoaded", function() {
       data.sort((a, b) => d3.ascending(a.date, b.date));
 
       // Define las escalas para los ejes
-      const x = d3.scaleTime()
-                  .domain(d3.extent(data, d => d.date))
-                  .range([0, width]);
+      x = d3.scaleTime()
+            .domain(d3.extent(data, d => d.date))
+            .range([0, width]);
 
-      const y = d3.scaleLinear()
-                  .domain([0, d3.max(data, d => d.revenue)])
-                  .range([height, 0]);
+      y = d3.scaleLinear()
+            .domain([0, d3.max(data, d => d.revenue)])
+            .range([height, 0]);
 
       // Crea el SVG dentro del contenedor #grafico-serie-temporal
-      const svg = d3.select("#grafico-serie-temporal")
+      svg = d3.select("#grafico-serie-temporal")
         .append("svg")
           .attr("width",  width  + margin.left + margin.right)
           .attr("height", height + margin.top  + margin.bottom)
         .append("g")
           .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
-      // Añade el eje X (abajo)
+      // Añade el eje X (abajo) con fuente más grande
       svg.append("g")
+         .attr("class", "x-axis")
          .attr("transform", `translate(0, ${height})`)
-         .call(d3.axisBottom(x).ticks(6));
+         .call(d3.axisBottom(x).ticks(6))
+         .selectAll("text")
+         .style("font-size", "12px");
 
-      // Añade el eje Y (izquierda)
+      // Añade el eje Y (izquierda) con fuente más grande
       svg.append("g")
-         .call(d3.axisLeft(y));
+         .attr("class", "y-axis")
+         .call(d3.axisLeft(y))
+         .selectAll("text")
+         .style("font-size", "12px");
 
       // Define la función generadora de la línea
-      const line = d3.line()
-                     .x(d => x(d.date))
-                     .y(d => y(d.revenue));
+      line = d3.line()
+               .x(d => x(d.date))
+               .y(d => y(d.revenue));
 
       // Dibuja la línea
       svg.append("path")
          .datum(data)
+         .attr("class", "line")
          .attr("fill", "none")
          .attr("stroke", "steelblue")
          .attr("stroke-width", 2)
@@ -83,6 +94,42 @@ document.addEventListener("DOMContentLoaded", function() {
       console.error("Error al cargar o procesar el CSV:", error);
     });
   }
+
+  function handleResize() {
+    const currentWidth = container.offsetWidth;
+    const currentHeight = container.offsetHeight;
+    
+    if (svg && x && y) {
+      updateDimensions();
+      
+      svg.select("svg")
+         .attr("width", width + margin.left + margin.right)
+         .attr("height", height + margin.top + margin.bottom);
+      
+      x.range([0, width]);
+      y.range([height, 0]);
+      
+      svg.select(".x-axis")
+         .attr("transform", `translate(0,${height})`)
+         .call(d3.axisBottom(x).ticks(6))
+         .selectAll("text")
+         .style("font-size", "12px");
+      
+      svg.select(".y-axis")
+         .call(d3.axisLeft(y))
+         .selectAll("text")
+         .style("font-size", "12px");
+      
+      svg.select(".line")
+         .attr("d", line);
+      
+      svg.selectAll(".point")
+         .attr("cx", d => x(d.date))
+         .attr("cy", d => y(d.revenue));
+    }
+  }
+
+  window.addEventListener("resize", handleResize);
 
   // Manejadores de eventos para los botones
 

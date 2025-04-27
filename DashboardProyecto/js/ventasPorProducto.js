@@ -1,17 +1,47 @@
-// Dimensiones
-const margin = { top: 20, right: 30, bottom: 30, left: 150 },
-    width = 600 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom;
+// Variables globales para el redimensionamiento
+const container = document.getElementById("grafico-ventas");
+let margin, width, height, svg, x, y;
 
-// Crear SVG
-const svg = d3.select("#grafico-ventas")
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform", `translate(${margin.left},${margin.top})`);
+function updateDimensions() {
+    margin = { top: 20, right: 30, bottom: 30, left: 150 };
+    width = container.offsetWidth - margin.left - margin.right;
+    height = container.offsetHeight - margin.top - margin.bottom;
+}
 
-// Tooltip para mostrar las unidades de cada producto 
+function handleResize() {
+    if (svg && x && y) {
+        updateDimensions();
+        
+        svg.select("svg")
+           .attr("width", width + margin.left + margin.right)
+           .attr("height", height + margin.top + margin.bottom);
+        
+        x.range([0, width]);
+        y.range([0, height]);
+        
+        const tickValues = d3.range(0, x.domain()[1], 5000);
+        
+        svg.selectAll(".bar")
+           .attr("y", d => y(d.Product))
+           .attr("height", y.bandwidth())
+           .attr("width", d => x(d['Quantity Ordered']));
+        
+        svg.select(".x-axis")
+           .attr("transform", `translate(0,${height})`)
+           .call(d3.axisBottom(x).tickValues(tickValues))
+           .selectAll("text")
+           .style("font-size", "12px");
+        
+        svg.select(".y-axis")
+           .call(d3.axisLeft(y))
+           .selectAll("text")
+           .style("font-size", "12px")
+           .style("text-anchor", "start")
+           .attr("x", -145);
+    }
+}
+
+// Tooltip
 const tooltip = d3.select("body").append("div")
     .attr("class", "tooltip")
     .style("opacity", 0)
@@ -23,7 +53,18 @@ const tooltip = d3.select("body").append("div")
     .style("position", "absolute")
     .style("pointer-events", "none");
 
-// Carga de datos preprocesados
+// Inicializar dimensiones
+updateDimensions();
+
+// Crear SVG
+svg = d3.select("#grafico-ventas")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", `translate(${margin.left},${margin.top})`);
+
+// Carga de datos
 d3.csv("data/productos_vendidos.csv").then(data => {
     data.forEach(d => {
         d['Quantity Ordered'] = +d['Quantity Ordered'];
@@ -31,16 +72,15 @@ d3.csv("data/productos_vendidos.csv").then(data => {
 
     data.sort((a, b) => b['Quantity Ordered'] - a['Quantity Ordered']);
 
-    const y = d3.scaleBand()
+    y = d3.scaleBand()
         .domain(data.map(d => d.Product))
         .range([0, height])
         .padding(0.2);
 
-    const x = d3.scaleLinear()
+    x = d3.scaleLinear()
         .domain([0, d3.max(data, d => d['Quantity Ordered'])])
         .range([0, width]);
 
-    // reducción de la escala horizontal
     const tickValues = d3.range(0, d3.max(data, d => d['Quantity Ordered']), 5000);
 
     svg.selectAll(".bar")
@@ -64,14 +104,21 @@ d3.csv("data/productos_vendidos.csv").then(data => {
 
     // Eje X
     svg.append("g")
+        .attr("class", "x-axis")
         .attr("transform", `translate(0,${height})`)
-        .call(d3.axisBottom(x).tickValues(tickValues));
+        .call(d3.axisBottom(x).tickValues(tickValues))
+        .selectAll("text")
+        .style("font-size", "12px");
 
-    // Eje Y (etiquetas alineadas a la izquierda)
+    // Eje Y
     svg.append("g")
+        .attr("class", "y-axis")
         .call(d3.axisLeft(y))
         .selectAll("text")
-        .style("text-anchor", "start") // alineación a la izquierda
-        .attr("x", -150);
-
+        .style("font-size", "12px")
+        .style("text-anchor", "start")
+        .attr("x", -145);
 });
+
+// Evento de redimensionamiento
+window.addEventListener("resize", handleResize);
